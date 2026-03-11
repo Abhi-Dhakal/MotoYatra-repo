@@ -1,0 +1,166 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Poppins', sans-serif;
+}
+
+body {
+    background: #fafafa;
+    color: #333;
+}
+nav {
+    background: #fff;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 60px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+}
+
+.logo img {
+    width: 100px;
+}
+
+nav ul {
+    display: flex;
+    gap: 45px;
+    list-style: none;
+}
+
+nav ul li a {
+    text-decoration: none;
+    color: #333;
+    font-weight: 500;
+}
+
+nav ul li a:hover,
+nav ul li a.active {
+    color: #ff7b00;
+}
+
+.buttons {
+    display: flex;
+    gap: 12px;
+}
+
+.buttons button {
+    padding: 8px 18px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+.profile {
+    background: #fff;
+    border: 1px solid #ddd;
+}
+
+.logout {
+    background: #ff7b00;
+    color: #fff;
+}
+.contact-header {
+    text-align: center;
+    margin-top: 40px;
+}
+
+.contact-header h1 {
+    color: #ff7b00;
+    font-size: 32px;
+}
+
+.contact-header p {
+    color: #666;
+    margin-top: 6px;
+}
+
+.contact-wrapper {
+    display: flex;
+    justify-content: center;
+    gap: 40px;
+    padding: 40px 60px;
+    flex-wrap: wrap;
+}
+
+.contact-box {
+    width: 420px;
+    background: #fff;
+    padding: 25px;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.12);
+}
+
+.contact-right {
+    box-shadow: 0 4px 16px rgba(0,0,0,0.18);
+}
+
+.contact-box h2 {
+    margin-bottom: 8px;
+}
+
+.subtitle {
+    font-size: 13px;
+    color: #888;
+    margin-bottom: 18px;
+}
+
+form label {
+    font-size: 14px;
+    font-weight: 500;
+}
+
+form input,
+form textarea {
+    width: 100%;
+    padding: 10px;
+    margin-top: 6px;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+}
+
+form textarea {
+    height: 120px;
+    resize: none;
+}
+
+.send-btn {
+    width: 100%;
+    padding: 10px;
+    margin-top: 15px;
+    background: #ff7b00;
+    border: none;
+    color: white;
+    font-size: 15px;
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+.info-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 18px;
+}
+
+.icon-img {
+    width: 24px;
+    height: 24px;
+    object-fit: contain;
+}
+
+.image-box {
+    width: 100%;
+    height: 180px;
+    overflow: hidden;
+    border-radius: 8px;
+    margin-top: 18px;
+}
+
+.image-box img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    border-radius: 8px;
+}

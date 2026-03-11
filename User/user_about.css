@@ -1,0 +1,311 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Poppins', sans-serif;
+}
+
+body {
+    background-color: #fafafa;
+    color: #333;
+}
+
+/* NAVIGATION */
+nav {
+    background: #fff;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 60px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.08);
+}
+
+.logo img {
+    width: 100px;
+    height: auto;
+}
+
+nav ul {
+    list-style: none;
+    display: flex;
+    gap: 45px;
+}
+
+nav ul li a {
+    text-decoration: none;
+    color: #333;
+    font-weight: 500;
+    transition: 0.3s;
+}
+
+nav ul li a:hover {
+    color: #ff7b00;
+}
+
+.buttons {
+    display: flex;
+    gap: 12px;
+}
+
+.buttons button {
+    padding: 8px 18px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: 500;
+}
+
+.profile {
+    background: #fff;
+    border: 1px solid #ddd;
+    color: #333;
+}
+
+.logout {
+    background: #ff7b00;
+    color: #fff;
+}
+
+.logout:hover {
+    background: #e66c00;
+}
+/* First Page */
+.about_first {
+    position: relative;
+    height: 100vh;
+    width: 100%;
+    background: url("../Necessary Image/about_us.png") center/cover no-repeat;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.overlay {
+    position: absolute;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.35);
+}
+
+.content {
+    position: relative;
+    z-index: 10;
+    text-align: center;
+    width: 80%;
+    max-width: 900px;
+    color: #fff;
+}
+
+.content h1 {
+    font-size: 3rem;
+    font-weight: 700;
+}
+
+.brand {
+    color: #ff7b00;
+}
+
+.subtitle {
+    margin: 1.2rem auto;
+    font-size: 1.1rem;
+    line-height: 1.6;
+    max-width: 700px;
+    border-top: 3px solid #ff7b00;
+    border-bottom: 3px solid #ff7b00;
+    padding: 1rem;
+}
+
+.btn {
+    display: inline-block;
+    margin-top: 1.5rem;
+    padding: 0.7rem 1.6rem;
+    background: #ff7b00;
+    color: #fff;
+    border-radius: 5px;
+    text-decoration: none;
+    font-weight: 600;
+    transition: 0.25s ease;
+}
+
+.btn:hover {
+    background: #e76900;
+}
+/* Second Page */
+.yatra-journey {
+    display: flex;
+    align-items: center;
+    gap: 50px;
+    padding: 70px 80px;
+    background: #ffffff;
+}
+
+.journey-text {
+    flex: 1.2;
+}
+
+.journey-text h2 {
+    font-size: 2.4rem;
+    font-weight: 700;
+    color: #222;
+    margin-bottom: 18px;
+}
+
+.journey-text p {
+    font-size: 1rem;
+    color: #555;
+    line-height: 1.7;
+    margin-bottom: 15px;
+}
+
+.journey-image {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+}
+
+.journey-image img {
+    width: 100%;
+    max-width: 520px;
+    border-radius: 16px;
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.1);
+}
+/* Third Page */
+
+.team-wrapper {
+    background: #f3f3f3;
+    padding: 70px 0;
+    text-align: center;
+}
+
+.team-heading {
+    font-size: 2rem;
+    font-weight: 700;
+    margin-bottom: 40px;
+}
+
+.team-grid {
+    display: flex;
+    justify-content: center;
+    gap: 35px;
+    flex-wrap: wrap;
+}
+
+.member-card {
+    background: #fff;
+    padding: 25px 20px;
+    width: 260px;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.member-card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 8px 18px rgba(0,0,0,0.15);
+}
+
+.photo img {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-bottom: 15px;
+}
+
+.member-card h3 {
+    font-size: 1.2rem;
+    font-weight: 600;
+}
+
+.member-card span {
+    font-size: 0.9rem;
+    color: #666;
+}
+/* Benefit Area */
+.benefit-area {
+    padding: 70px 0;
+    background: #ffffff;
+    text-align: center;
+}
+
+.benefit-heading {
+    font-size: 2rem;
+    font-weight: 700;
+    margin-bottom: 45px;
+}
+
+.benefit-wrapper {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 30px;
+    padding: 0 20px;
+}
+
+.benefit-box {
+    width: 290px;
+    padding: 25px 20px;
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    transition: 0.3s ease;
+}
+
+.benefit-box:hover {
+    transform: translateY(-6px);
+}
+
+/* icon image */
+.benefit-icon img {
+    width: 40px;
+    height: 40px;
+    margin-bottom: 12px;
+}
+
+.benefit-box h3 {
+    font-size: 1.2rem;
+    font-weight: 600;
+    margin-bottom: 8px;
+}
+
+.benefit-box p {
+    font-size: 0.95rem;
+    color: #555;
+    line-height: 1.6;
+}
+
+/* Action Section */
+
+.start-ride {
+    background: #d27907;
+    padding: 85px 20px;
+    color: #fff;
+    text-align: center;
+}
+
+.start-inner h2 {
+    font-size: 2.2rem;
+    font-weight: 700;
+    margin-bottom: 15px;
+}
+
+.start-inner p {
+    font-size: 1rem;
+    margin-bottom: 25px;
+    line-height: 1.5;
+}
+
+.start-btn {
+    display: inline-block;
+    padding: 12px 30px;
+    background: #fff;
+    color: #212121;
+    font-weight: 600;
+    text-decoration: none;
+    font-size: 1rem;
+    border-radius: 6px;
+    transition: 0.3s ease;
+}
+
+.start-btn:hover {
+    background: #f3f3f3;
+}

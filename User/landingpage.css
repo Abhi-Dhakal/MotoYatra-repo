@@ -1,0 +1,346 @@
+/* First Page */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Poppins', sans-serif;
+  color: #333;
+  background-color: #f3f3f3;
+}
+
+.navbar {
+  position: fixed;
+  width: 100%;
+  height: 12%;
+  background-color: #f47c20;
+  color: #fff;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 40px;
+  z-index: 100;
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.logo img {
+  width: 100px;
+  height: 70px;
+}
+
+.nav a {
+  text-decoration: none;
+  color: white;
+  margin: 0 15px;
+  font-weight: 600;
+}
+
+.nav a:hover {
+  text-decoration: underline;
+}
+
+.nav-buttons button {
+  margin-left: 10px;
+  background-color: white;
+  color: #333;
+  border: none;
+  border-radius: 20px;
+  padding: 8px 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: 0.3s;
+  opacity: 70%;
+}
+
+.login:hover {
+  background-color: #ffe3cb;
+}
+
+.register {
+  border: 2px solid #333;
+}
+
+.register:hover {
+  background-color: #333;
+  color: white;
+}
+
+.firstpage {
+  background: url('bike.jpeg') no-repeat center center/cover;
+  opacity: 50%;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  position: relative;
+}
+
+.firtpage-content {
+  position: relative;
+  z-index: 2;
+  color: #333;
+}
+
+.firstpage-content h1 {
+  font-size: 20;
+  font-weight: 700;
+}
+
+.buttons {
+  margin-top: 30px;
+}
+
+.buttons button {
+  margin: 5px;
+  padding: 10px 22px;
+  font-size: 1rem;
+  font-weight: 600;
+  border-radius: 8px;
+  cursor: pointer;
+  border: none;
+  transition: 0.3s;
+}
+
+/* Second Page */
+.secondpage,
+.thirdpage,
+.fourthpage,
+.featured-bike {
+  text-align: center;
+  padding: 60px 20px;
+}
+
+.secondpage h2,
+.thirdpage h2,
+.fourthpage h2,
+.featured-bike h2 {
+  font-size: 2rem;
+  font-weight: bold;
+  margin-bottom: 40px;
+}
+
+.features,
+.works {
+  display: flex;
+  justify-content: center;
+  gap: 30px;
+}
+
+.box {
+  background: #fff;
+  padding: 25px;
+  border-radius: 10px;
+  width: 280px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.box h3 {
+  font-size: 1.2rem;
+  margin-bottom: 10px;
+  font-weight: 600;
+}
+
+.box p {
+  font-size: 0.95rem;
+  line-height: 1.5;
+  color: #555;
+}
+
+.icon img {
+  margin-bottom: 15px;
+  width: auto;
+  height: auto;
+}
+
+/* Third Page */
+.thirdpage, .featured-bike, .contact-section{
+  background: rgb(255, 255, 255);
+  opacity: 90%;
+}
+
+/* Fourth Page */
+.about-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 40px;
+}
+
+.about-text {
+  background: #fff;
+  padding: 25px;
+  border-radius: 12px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  max-width: 500px;
+  line-height: 1.6;
+}
+
+.about-image img {
+  width: 340px;
+  height: 220px;
+  border-radius: 100px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+/* Fifth Page */
+.featured-bike {
+  width: 100%;
+  margin: 0 auto;
+  padding: 40px 20px;
+}
+
+.featured-bike h2 {
+  text-align: center;
+  font-size: 32px;
+  margin-bottom: 40px;
+  color: #333;
+  font-weight: 600;
+}
+
+.bike-container-right {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 25px;
+}
+
+.bikes {
+  background: white;
+  border-radius: 8px;
+  padding: 20px;
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08);
+  text-align: center;
+  transition: transform 0.3s ease;
+}
+
+.bikes img {
+  width: 100%;
+  max-width: 180px;
+  height: 130px;
+  object-fit: contain;
+  margin-bottom: 15px;
+}
+
+.bikes h3 {
+  font-size: 18px;
+  margin-bottom: 8px;
+  color: #222;
+}
+
+.bikes .type {
+  color: #666;
+  font-size: 14px;
+  margin-bottom: 8px;
+}
+
+.bikes .price {
+  font-size: 18px;
+  font-weight: 600;
+  color: #f18a24;
+  margin-bottom: 15px;
+}
+
+.bikes button {
+  background-color: #eb5809;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 4px;
+  font-size: 14px;
+  cursor: pointer;
+  width: 100%;
+}
+
+.bikes button:hover {
+  background-color: #1a252f;
+}
+/* Sixth Page */
+.join-section{
+  margin: 0;
+  font-family: 'Poppins', sans-serif;
+  background-color: #fdf6f3;
+  color: #222;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  padding: 40px 20px;
+}
+.join-container {
+  max-width: 700px;
+}
+.join-container h1 {
+  font-size: 2.2rem;
+  font-weight: 700;
+  margin-bottom: 12px;
+  color: #000;
+}
+
+.join-container h1 span {
+  display: block;
+}
+.join-container p {
+  font-size: 1.1rem;
+  color: #555;
+  margin-bottom: 30px;
+}
+.buttons {
+  display: flex;
+  justify-content: center;
+  gap: 16px;
+}
+
+.login{
+  background-color: #fff;
+  color: #111;
+}
+
+.login:hover {
+  background-color: #f1f1f1;
+}
+
+.register {
+  background-color: #f97316;
+  color: #fff;
+  border: none;
+}
+
+.register:hover {
+  background-color: #ea580c;
+}
+/* Seventh Page */
+.contact-section {
+  text-align: center;
+  padding: 60px 20px;
+}
+
+.contact-section h2 {
+  font-size: 2rem;
+  font-weight: 700;
+  margin-bottom: 40px;
+}
+.contact-info {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 60px;
+  flex-wrap: wrap;
+}
+.info-box {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 1.05rem;
+  color: #222;
+}
+.icon1{
+  width: 28px;
+  height: 28px;
+}
