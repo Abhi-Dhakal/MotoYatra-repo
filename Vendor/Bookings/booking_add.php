@@ -18,16 +18,17 @@ $bikes = mysqli_query($conn, "
 SELECT bikes.id, bikes.make, bikes.model, bikes.price_per_day
 FROM vendor_bikes
 JOIN bikes ON bikes.id = vendor_bikes.bike_id
-WHERE vendor_bikes.vendor_id = $vendor_id
+WHERE vendor_bikes.vendor_id='$vendor_id'
 ");
 
-/* Insert Booking */
+/* Submit Booking */
+
 if (isset($_POST['submit'])) {
 
     $user_id = intval($_POST['user_id']);
     $bike_id = intval($_POST['bike_id']);
-    $start = $_POST['start_date'];
-    $end = $_POST['end_date'];
+    $start = mysqli_real_escape_string($conn, $_POST['start_date']);
+    $end = mysqli_real_escape_string($conn, $_POST['end_date']);
 
     $today = date("Y-m-d");
 
@@ -37,33 +38,71 @@ if (isset($_POST['submit'])) {
         $error = "All fields are required.";
     } elseif ($start < $today) {
         $error = "Start date cannot be in the past.";
-    } elseif ($end < $start) {
+    } elseif ($end <= $start) {
         $error = "End date must be after start date.";
     } else {
 
-        /* Get price */
-        $price_query = mysqli_query($conn, "SELECT price_per_day FROM bikes WHERE id='$bike_id'");
-        $price_row = mysqli_fetch_assoc($price_query);
-        $price = $price_row['price_per_day'];
+        /* Check user exists */
 
-        /* Calculate days */
-        $days = (strtotime($end) - strtotime($start)) / (60 * 60 * 24);
+        $user_check = mysqli_query($conn, "SELECT user_id FROM users WHERE user_id='$user_id'");
 
-        if ($days <= 0) {
-            $days = 1;
-        }
+        if (mysqli_num_rows($user_check) == 0) {
+            $error = "Selected user does not exist.";
+        } else {
 
-        $total_price = $days * $price;
+            /* Check bike belongs to vendor */
 
-        /* Insert Booking */
-
-        mysqli_query($conn, "
-INSERT INTO bookings(user_id,bike_id,vendor_id,start_date,end_date,total_price)
-VALUES('$user_id','$bike_id','$vendor_id','$start','$end','$total_price')
+            $bike_check = mysqli_query($conn, "
+SELECT bikes.price_per_day
+FROM bikes
+JOIN vendor_bikes ON bikes.id = vendor_bikes.bike_id
+WHERE bikes.id='$bike_id' AND vendor_bikes.vendor_id='$vendor_id'
 ");
 
-        header("Location: ../vendor.php");
-        exit;
+            if (mysqli_num_rows($bike_check) == 0) {
+                $error = "Invalid bike selection.";
+            } else {
+
+                $row = mysqli_fetch_assoc($bike_check);
+                $price = $row['price_per_day'];
+
+                /* Calculate days */
+
+                $days = (strtotime($end) - strtotime($start)) / (60 * 60 * 24);
+
+                if ($days <= 0) {
+                    $days = 1;
+                }
+
+                /* Calculate total */
+
+                $total_price = $days * $price;
+
+                /* Apply Discount */
+
+                $discount = 0;
+
+                if ($days >= 30) {
+                    $discount = $total_price * 0.10; //10%
+                } elseif ($days >= 7) {
+                    $discount = $total_price * 0.05; //5%
+                }
+
+                $final_price = $total_price - $discount;
+
+                /* Insert booking */
+
+                mysqli_query($conn, "
+INSERT INTO bookings(user_id,bike_id,vendor_id,start_date,end_date,total_price)
+VALUES('$user_id','$bike_id','$vendor_id','$start','$end','$final_price')
+");
+
+                header("Location: ../vendor.php?success=booking_added");
+                exit;
+
+            }
+
+        }
 
     }
 
@@ -78,6 +117,10 @@ VALUES('$user_id','$bike_id','$vendor_id','$start','$end','$total_price')
     <title>Add Booking</title>
 
     <style>
+        * {
+            box-sizing: border-box;
+        }
+
         body {
             font-family: Poppins;
             background: #f4f4f9;
@@ -147,10 +190,11 @@ VALUES('$user_id','$bike_id','$vendor_id','$start','$end','$total_price')
         }
         ?>
 
-        <form method="POST" name="bookingForm" onsubmit="return validateForm()">
+        <form method="POST" onsubmit="return validateForm()">
 
             <label>User</label>
             <select name="user_id" required>
+
                 <option value="">Select User</option>
 
                 <?php while ($u = mysqli_fetch_assoc($users)) { ?>
@@ -172,8 +216,10 @@ VALUES('$user_id','$bike_id','$vendor_id','$start','$end','$total_price')
                 <?php while ($b = mysqli_fetch_assoc($bikes)) { ?>
 
                     <option value="<?php echo $b['id']; ?>" data-price="<?php echo $b['price_per_day']; ?>">
+
                         <?php echo htmlspecialchars($b['make'] . " " . $b['model']); ?>
                         (Rs <?php echo $b['price_per_day']; ?>/day)
+
                     </option>
 
                 <?php } ?>
@@ -199,16 +245,13 @@ VALUES('$user_id','$bike_id','$vendor_id','$start','$end','$total_price')
 
     </div>
 
-
     <script>
-
-        /* Prevent Past Start Date */
 
         let today = new Date().toISOString().split('T')[0];
         document.getElementById("start").setAttribute("min", today);
+        document.getElementById("end").setAttribute("min", today);
 
-
-        /* Price Calculator */
+        /* Price + Discount Calculator */
 
         function calculatePrice() {
 
@@ -216,9 +259,7 @@ VALUES('$user_id','$bike_id','$vendor_id','$start','$end','$total_price')
             let start = document.getElementById("start").value;
             let end = document.getElementById("end").value;
 
-            if (bike.selectedIndex === 0) {
-                return;
-            }
+            if (bike.selectedIndex === 0) { return; }
 
             let price = bike.options[bike.selectedIndex].dataset.price;
 
@@ -227,7 +268,7 @@ VALUES('$user_id','$bike_id','$vendor_id','$start','$end','$total_price')
                 let startDate = new Date(start);
                 let endDate = new Date(end);
 
-                if (endDate < startDate) {
+                if (endDate <= startDate) {
                     alert("End date must be after start date");
                     document.getElementById("end").value = "";
                     return;
@@ -235,28 +276,43 @@ VALUES('$user_id','$bike_id','$vendor_id','$start','$end','$total_price')
 
                 let days = (endDate - startDate) / (1000 * 60 * 60 * 24);
 
-                if (days <= 0) {
-                    days = 1;
-                }
+                if (days <= 0) { days = 1; }
 
                 let total = days * price;
 
-                document.getElementById("total_price").value = "Rs " + total;
+                let discount = 0;
+
+                if (days >= 30) {
+                    discount = total * 0.10;
+                }
+
+                else if (days >= 7) {
+                    discount = total * 0.05;
+                }
+
+                let final = total - discount;
+
+                document.getElementById("total_price").value = "Rs " + final;
 
             }
 
         }
 
-
-        /* Final Form Validation */
+        /* Form Validation */
 
         function validateForm() {
 
             let start = document.getElementById("start").value;
+            let end = document.getElementById("end").value;
             let today = new Date().toISOString().split('T')[0];
 
             if (start < today) {
                 alert("Start date cannot be in the past");
+                return false;
+            }
+
+            if (end <= start) {
+                alert("End date must be after start date");
                 return false;
             }
 

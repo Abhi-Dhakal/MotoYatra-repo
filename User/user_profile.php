@@ -1,6 +1,7 @@
 <?php
 session_start();
 require "connection.php";
+
 if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'user') {
     header("Location: ../Login/login.php");
     exit;
@@ -8,27 +9,37 @@ if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'user') {
 
 $user_id = $_SESSION['user_id'];
 
+// Fetch user info
 $userQuery = mysqli_query($conn, "SELECT username, email FROM users WHERE user_id = $user_id");
 $user = mysqli_fetch_assoc($userQuery);
 
+// Total bookings (all past, current, cancelled)
+$totalBookingsQuery = mysqli_query($conn, "
+    SELECT COUNT(*) as total 
+    FROM bookings 
+    WHERE user_id = $user_id
+");
+$totalBookingsRow = mysqli_fetch_assoc($totalBookingsQuery);
+$totalBookings = $totalBookingsRow['total'];
+
+// Current bookings (upcoming and active only)
 $currentBookings = mysqli_query($conn, "
-    SELECT b.make, b.model, bk.start_date, bk.end_date, bk.status
+    SELECT bk.id, b.make, b.model, bk.start_date, bk.end_date, bk.status
     FROM bookings bk
     INNER JOIN bikes b ON bk.bike_id = b.id
-    WHERE bk.user_id = $user_id AND bk.end_date >= CURDATE()
+    WHERE bk.user_id = $user_id AND bk.end_date >= CURDATE() AND bk.status='active'
     ORDER BY bk.start_date ASC
 ");
+$activeBookings = mysqli_num_rows($currentBookings);
 
+// Fetch full rental history (all bookings)
 $history = mysqli_query($conn, "
-    SELECT b.make, b.model, bk.start_date, bk.end_date, bk.total_price, bk.status
+    SELECT bk.id, b.make, b.model, bk.start_date, bk.end_date, bk.total_price, bk.status
     FROM bookings bk
     INNER JOIN bikes b ON bk.bike_id = b.id
     WHERE bk.user_id = $user_id
     ORDER BY bk.start_date DESC
 ");
-
-$totalBookings = mysqli_num_rows($history);
-$activeBookings = mysqli_num_rows($currentBookings);
 ?>
 
 <!DOCTYPE html>
@@ -57,8 +68,8 @@ $activeBookings = mysqli_num_rows($currentBookings);
             margin: auto;
             padding: 15px 30px;
             display: flex;
-            align-items: center;
             justify-content: space-between;
+            align-items: center;
         }
 
         .logo img {
@@ -79,10 +90,6 @@ $activeBookings = mysqli_num_rows($currentBookings);
             font-weight: 500;
         }
 
-        .logout-form {
-            margin: 0;
-        }
-
         .logout {
             padding: 8px 20px;
             border: none;
@@ -91,13 +98,6 @@ $activeBookings = mysqli_num_rows($currentBookings);
             color: #fff;
             cursor: pointer;
             font-weight: 600;
-            font-size: 0.95rem;
-            transition: background-color 0.3s, transform 0.2s;
-        }
-
-        .logout:hover {
-            color: white;
-            transform: scale(1.05);
         }
 
         .container {
@@ -235,8 +235,11 @@ $activeBookings = mysqli_num_rows($currentBookings);
             background: #dc3545;
         }
 
-        .badge-upcoming {
-            background: #007bff;
+        .flash-message {
+            text-align: center;
+            font-weight: bold;
+            margin-bottom: 20px;
+            color: #28a745;
         }
     </style>
 </head>
@@ -248,7 +251,6 @@ $activeBookings = mysqli_num_rows($currentBookings);
             <div class="logo">
                 <img src="../Necessary Image/moto_yatra.png" alt="Logo">
             </div>
-
             <ul class="nav-links">
                 <li><a href="user.php">Home</a></li>
                 <li><a href="user_about.html">About</a></li>
@@ -256,16 +258,23 @@ $activeBookings = mysqli_num_rows($currentBookings);
                 <li><a href="user_profile.php">Profile</a></li>
                 <li><a href="booking_details.php">Booking Details</a></li>
             </ul>
-
-            <form action="../Logout/logout.php" method="POST" class="logout-form">
+            <form action="../Logout/logout.php" method="POST">
                 <button type="submit" class="logout">Logout</button>
             </form>
         </div>
     </nav>
 
-
     <div class="container">
+
         <h2>Welcome, <?php echo htmlspecialchars($user['username']); ?>!</h2>
+
+        <!-- Flash message -->
+        <?php
+        if (isset($_SESSION['message'])) {
+            echo '<p class="flash-message">' . $_SESSION['message'] . '</p>';
+            unset($_SESSION['message']);
+        }
+        ?>
 
         <div class="dashboard-summary">
             <div class="summary-card">
@@ -301,6 +310,18 @@ $activeBookings = mysqli_num_rows($currentBookings);
                     echo '<p>Start: ' . htmlspecialchars($row['start_date']) . '</p>';
                     echo '<p>End: ' . htmlspecialchars($row['end_date']) . '</p>';
                     echo '<span class="badge ' . $statusClass . '">' . ucfirst($row['status']) . '</span>';
+
+                    if ($row['status'] == 'active') {
+                        echo '<form method="POST" action="cancel_booking.php" style="margin-top:10px;">';
+                        echo '<input type="hidden" name="booking_id" value="' . $row['id'] . '">';
+                        echo '<button type="submit"
+                        onclick="return confirm(\'Are you sure you want to cancel this booking?\')"
+                        style="padding:8px 12px; border:none; border-radius:6px; background:#dc3545; color:white; cursor:pointer;">
+                        Cancel Booking
+                    </button>';
+                        echo '</form>';
+                    }
+
                     echo '</div>';
                 }
             } else {

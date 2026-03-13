@@ -1,7 +1,6 @@
 <?php
 session_start();
 
-// Ensure user is logged in as a "user"
 if (!isset($_SESSION['role']) || $_SESSION['role'] != "user") {
     header("Location: ../Login/login.php");
     exit;
@@ -9,7 +8,6 @@ if (!isset($_SESSION['role']) || $_SESSION['role'] != "user") {
 
 require "connection.php";
 
-// Validate bike ID
 if (!isset($_GET['id'])) {
     die("Invalid request.");
 }
@@ -17,14 +15,14 @@ if (!isset($_GET['id'])) {
 $bike_id = intval($_GET['id']);
 $user_id = intval($_SESSION['user_id']);
 
-// Fetch bike
 $bike_query = mysqli_query($conn, "SELECT * FROM bikes WHERE id = $bike_id");
+
 if (mysqli_num_rows($bike_query) == 0) {
     die("Bike not found.");
 }
+
 $bike = mysqli_fetch_assoc($bike_query);
 
-// Fetch vendors with available quantity
 $vendors = mysqli_query(
     $conn,
     "SELECT v.id, v.name, vb.quantity 
@@ -36,7 +34,6 @@ $vendors = mysqli_query(
 $payment_success = false;
 $error_message = "";
 
-// Handle form submission
 if ($_SERVER['REQUEST_METHOD'] == "POST") {
 
     $vendor_id = intval($_POST['vendor']);
@@ -57,7 +54,6 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
         $error_message = "End date cannot be before start date.";
     }
 
-    // Check vendor availability
     $check_vendor = mysqli_query(
         $conn,
         "SELECT quantity FROM vendor_bikes 
@@ -68,22 +64,10 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
         $error_message = "Invalid vendor selected.";
     } else {
         $vendor_data = mysqli_fetch_assoc($check_vendor);
+
         if ($vendor_data['quantity'] <= 0) {
             $error_message = "Selected vendor is out of stock.";
         }
-    }
-
-    // Prevent duplicate active booking
-    $duplicate_check = mysqli_query(
-        $conn,
-        "SELECT id FROM bookings 
-         WHERE user_id = $user_id 
-         AND bike_id = $bike_id 
-         AND status = 'active'"
-    );
-
-    if (mysqli_num_rows($duplicate_check) > 0) {
-        $error_message = "You already have an active booking for this bike.";
     }
 
     if (empty($error_message)) {
@@ -97,16 +81,14 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
             $error_message = "Invalid booking duration.";
         } else {
 
-            // Base price
             $base_price = $days * $bike['price_per_day'];
 
-            // Discount rules
             $discount = 0;
 
             if ($days >= 30) {
-                $discount = 0.10; // 10% monthly
+                $discount = 0.10;
             } elseif ($days >= 7) {
-                $discount = 0.05; // 5% weekly
+                $discount = 0.05;
             }
 
             $total_price = $base_price - ($base_price * $discount);
@@ -129,9 +111,12 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
             );
 
             if ($insert && $update) {
+
                 mysqli_commit($conn);
                 $payment_success = true;
+
             } else {
+
                 mysqli_rollback($conn);
                 $error_message = "Booking failed. Please try again.";
             }
@@ -244,7 +229,7 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
                 <div class="error"><?php echo $error_message; ?></div>
             <?php endif; ?>
 
-            <form method="POST" id="bookingForm">
+            <form method="POST">
 
                 <label>Bike</label>
                 <input type="text" value="<?php echo htmlspecialchars($bike['make'] . ' ' . $bike['model']); ?>" readonly>
@@ -253,6 +238,7 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
                 <input type="number" id="pricePerDay" value="<?php echo $bike['price_per_day']; ?>" readonly>
 
                 <label>Choose Vendor</label>
+
                 <select name="vendor" required>
 
                     <option value="">-- Select Vendor --</option>
@@ -308,16 +294,12 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
                     let message = "";
 
                     if (diffDays >= 30) {
-
                         discount = 0.10;
                         message = "10% Monthly Discount Applied";
-
                     }
                     else if (diffDays >= 7) {
-
                         discount = 0.05;
                         message = "5% Weekly Discount Applied";
-
                     }
 
                     total = total - (total * discount);
@@ -325,11 +307,10 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
                     totalPriceElem.textContent = total.toFixed(2);
                     discountMessage.textContent = message;
 
-                } else {
-
+                }
+                else {
                     totalPriceElem.textContent = "0";
                     discountMessage.textContent = "";
-
                 }
 
             }
