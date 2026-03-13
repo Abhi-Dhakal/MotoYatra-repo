@@ -1,51 +1,53 @@
 <?php
 include("connection.php");
 
-if($_SERVER["REQUEST_METHOD"]=="POST"){
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
-$email=$_POST['email'];
+    $email = $_POST['email'];
 
-$query="SELECT * FROM users WHERE email='$email'";
-$result=mysqli_query($conn,$query);
+    $query = "SELECT * FROM users WHERE email='$email'";
+    $result = mysqli_query($conn, $query);
 
-if(mysqli_num_rows($result)>0){
+    if (mysqli_num_rows($result) > 0) {
 
-header("Location: reset_password.php?email=$email");
-exit;
+        header("Location: reset_password.php?email=$email");
+        exit;
 
-}else{
+    } else {
 
-echo "<script>alert('Email not found');</script>";
+        echo "<script>alert('Email not found');</script>";
 
-}
+    }
 }
 ?>
 
 <!DOCTYPE html>
 <html>
+
 <head>
-<title>Forgot Password</title>
-<link rel="stylesheet" href="login.css">
+    <title>Forgot Password</title>
+    <link rel="stylesheet" href="login.css">
 </head>
 
 <body>
 
-<div class="login-container">
-<div class="login-card">
+    <div class="login-container">
+        <div class="login-card">
 
-<h2>Forgot Password</h2>
+            <h2>Forgot Password</h2>
 
-<form method="post">
+            <form method="post">
 
-<label>Email</label>
-<input type="email" name="email" required>
+                <label>Email</label>
+                <input type="email" name="email" required>
 
-<button type="submit" class="button">Verify Email</button>
+                <button type="submit" class="button">Verify Email</button>
 
-</form>
+            </form>
 
-</div>
-</div>
+        </div>
+    </div>
 
 </body>
+
 </html>

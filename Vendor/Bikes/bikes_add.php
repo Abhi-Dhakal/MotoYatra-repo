@@ -10,7 +10,7 @@ if (!isset($_SESSION['vendor_id'])) {
 $vendor_id = $_SESSION['vendor_id'];
 
 /* FETCH CATEGORIES */
-$categories = mysqli_query($conn,"SELECT * FROM categories");
+$categories = mysqli_query($conn, "SELECT * FROM categories");
 
 if (isset($_POST['add'])) {
 
