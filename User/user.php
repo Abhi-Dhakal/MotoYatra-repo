@@ -1,15 +1,11 @@
 <?php
 session_start();
-
-// Redirect if not logged in as user
 if (!isset($_SESSION['role']) || $_SESSION['role'] !== "user") {
     header("Location: ../Login/login.php");
     exit;
 }
 
 require "connection.php";
-
-// Fetch unique available bikes that are not deleted and linked to at least one vendor
 $query = "
     SELECT DISTINCT b.*
     FROM bikes b
@@ -19,18 +15,12 @@ $query = "
 ";
 
 $bikes = mysqli_query($conn, $query);
-
-// Fetch unique categories dynamically
 $cat_result = mysqli_query($conn, "SELECT DISTINCT category FROM bikes WHERE status='Available' AND is_deleted=0");
-
-// Fetch unique CC ranges dynamically (example: 150-200, 201-350, 351-600)
 $cc_ranges = [
     "150-200",
     "201-350",
     "351-600"
 ];
-
-// Fetch max price for slider
 $price_result = mysqli_query($conn, "SELECT MAX(price_per_day) as max_price FROM bikes WHERE status='Available' AND is_deleted=0");
 $max_price_row = mysqli_fetch_assoc($price_result);
 $max_price = $max_price_row['max_price'] ?? 8000;
@@ -114,7 +104,7 @@ $max_price = $max_price_row['max_price'] ?? 8000;
                     "../bikes image/" . $b['image'],
                     "../vendor/Bikes/uploads/" . $b['image']
                 ];
-                $imgPath = "../Necessary Image/bike 1.png"; // fallback
+                $imgPath = "../Necessary Image/bike 1.png";
                 foreach ($paths as $path) {
                     if (!empty($b['image']) && file_exists($path)) {
                         $imgPath = $path;

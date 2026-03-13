@@ -1,8 +1,6 @@
 <?php
 session_start();
 require "connection.php";
-
-// Redirect if not logged in or not a user
 if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'user') {
     header("Location: ../Login/login.php");
     exit;
@@ -10,11 +8,9 @@ if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'user') {
 
 $user_id = $_SESSION['user_id'];
 
-// Fetch user details
 $userQuery = mysqli_query($conn, "SELECT username, email FROM users WHERE user_id = $user_id");
 $user = mysqli_fetch_assoc($userQuery);
 
-// Current bookings
 $currentBookings = mysqli_query($conn, "
     SELECT b.make, b.model, bk.start_date, bk.end_date, bk.status
     FROM bookings bk
@@ -23,7 +19,6 @@ $currentBookings = mysqli_query($conn, "
     ORDER BY bk.start_date ASC
 ");
 
-// Rental history
 $history = mysqli_query($conn, "
     SELECT b.make, b.model, bk.start_date, bk.end_date, bk.total_price, bk.status
     FROM bookings bk
@@ -110,7 +105,6 @@ $activeBookings = mysqli_num_rows($currentBookings);
             max-width: 1200px;
             margin: 0 auto;
             padding-top: 120px;
-            /* space for fixed navbar */
         }
 
         h2 {
